@@ -37,6 +37,10 @@ export class OpenVidu {
   /**
    * @hidden
    */
+  public protocol: string;
+  /**
+   * @hidden
+   */
   public hostname: string;
   /**
    * @hidden
@@ -171,7 +175,7 @@ export class OpenVidu {
       }
 
       axios.post(
-        'https://' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_RECORDINGS + OpenVidu.API_RECORDINGS_START,
+        this.protocol + '//' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_RECORDINGS + OpenVidu.API_RECORDINGS_START,
         data,
         {
           headers: {
@@ -225,7 +229,7 @@ export class OpenVidu {
     return new Promise<Recording>((resolve, reject) => {
 
       axios.post(
-        'https://' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_RECORDINGS + OpenVidu.API_RECORDINGS_STOP + '/' + recordingId,
+        this.protocol + '//' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_RECORDINGS + OpenVidu.API_RECORDINGS_STOP + '/' + recordingId,
         undefined,
         {
           headers: {
@@ -277,7 +281,7 @@ export class OpenVidu {
     return new Promise<Recording>((resolve, reject) => {
 
       axios.get(
-        'https://' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_RECORDINGS + '/' + recordingId,
+        this.protocol + '//' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_RECORDINGS + '/' + recordingId,
         {
           headers: {
             'Authorization': this.basicAuth,
@@ -319,7 +323,7 @@ export class OpenVidu {
     return new Promise<Recording[]>((resolve, reject) => {
 
       axios.get(
-        'https://' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_RECORDINGS,
+        this.protocol + '//' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_RECORDINGS,
         {
           headers: {
             Authorization: this.basicAuth
@@ -371,7 +375,7 @@ export class OpenVidu {
     return new Promise<Error>((resolve, reject) => {
 
       axios.delete(
-        'https://' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_RECORDINGS + '/' + recordingId,
+        this.protocol + '//' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_RECORDINGS + '/' + recordingId,
         {
           headers: {
             'Authorization': this.basicAuth,
@@ -414,7 +418,7 @@ export class OpenVidu {
   public fetch(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       axios.get(
-        'https://' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_SESSIONS,
+        this.protocol + '//' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_SESSIONS,
         {
           headers: {
             Authorization: this.basicAuth
@@ -584,7 +588,7 @@ export class OpenVidu {
 
     return new Promise<{ changes: boolean, sessionChanges: ObjMap<boolean> }>((resolve, reject) => {
       axios.get(
-        'https://' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_SESSIONS + '?webRtcStats=true',
+        this.protocol + '//' + this.hostname + (!!this.port ? (':' + this.port) : '') + OpenVidu.API_SESSIONS + '?webRtcStats=true',
         {
           headers: {
             Authorization: this.basicAuth
@@ -692,6 +696,7 @@ export class OpenVidu {
       console.error("URL format incorrect", error);
       return;
     }
+    this.protocol = url.protocol;
     this.hostname = url.hostname;
     this.port = !!url.port ? parseInt(url.port) : undefined;
   }
